@@ -1,5 +1,7 @@
 const express = require('express'),
-     http = require('http');
+http = require('http');
+
+const dishRouter = require('./routers/dishRouter');
 
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -19,31 +21,32 @@ const app = express();
 
 app.use(morgan('dev'));
 app.use(express.static(__dirname + '/public'));
+app.use('/dishes', dishRouter);
 
 app.use(bodyParser.json());
 
-app.all('/dishes', (req,res,next) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  next();
-});
+// app.all('/dishes', (req,res,next) => {
+//   res.statusCode = 200;
+//   res.setHeader('Content-Type', 'text/plain');
+//   next();
+// });
 
-app.get('/dishes', (req,res,next) => {
-    res.end('Will send all the dishes to you!');
-});
+// app.get('/dishes', (req,res,next) => {
+//     res.end('Will send all the dishes to you!');
+// });
 
-app.post('/dishes', (req, res, next) => {
- res.end('Will add the dish: ' + req.body.name + ' with details: ' + req.body.description);
-});
+// app.post('/dishes', (req, res, next) => {
+//  res.end('Will add the dish: ' + req.body.name + ' with details: ' + req.body.description);
+// });
 
-app.put('/dishes', (req, res, next) => {
-  res.statusCode = 403;
-  res.end('PUT operation not supported on /dishes');
-});
+// app.put('/dishes', (req, res, next) => {
+//   res.statusCode = 403;
+//   res.end('PUT operation not supported on /dishes');
+// });
  
-app.delete('/dishes', (req, res, next) => {
-    res.end('Deleting all dishes');
-});
+// app.delete('/dishes', (req, res, next) => {
+//     res.end('Deleting all dishes');
+// });
 // params lấy trên đường URL
 // body lấy từ body
 app.get('/dishes/:dishId', (req,res,next) => {
