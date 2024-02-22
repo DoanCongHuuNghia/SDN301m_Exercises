@@ -17,6 +17,8 @@ var usersRouter = require('./routes/users');
 var dishRouter = require('./routes/dishRouter');
 var promoRouter = require('./routes/promoRouter');
 var leaderRouter = require('./routes/leaderRouter');
+var passport = require('passport');
+var authenticate = require('./authenticate');
 const Dishes = require('./models/dishes');
 
 const url = 'mongodb://localhost:27017/conFusion';
@@ -46,27 +48,23 @@ app.use(session({
   store: new FileStore()
 }));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 function auth (req, res, next) {
-    console.log(req.session);
+    console.log(req.user);
 
-  if(!req.session.user) {
+    if (!req.user) {
       var err = new Error('You are not authenticated!');
       err.status = 403;
-      return next(err);
-  }
-  else {
-    if (req.session.user === 'authenticated') {
-      next();
+      next(err);
     }
     else {
-      var err = new Error('You are not authenticated!');
-      err.status = 403;
-      return next(err);
+          next();
     }
-  }
 }
 
 app.use(auth);
